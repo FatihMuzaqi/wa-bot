@@ -1,0 +1,36 @@
+{
+  "name": "whatsapp-automation-ai-bot-backend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "db:migrate": "node src/database/migrator.js up",
+    "db:migrate:undo": "node src/database/migrator.js down",
+    "db:migrate:status": "node src/database/migrator.js status",
+    "db:seed": "node src/database/seeder.js up",
+    "db:seed:undo": "node src/database/seeder.js down",
+    "db:seed:status": "node src/database/seeder.js status"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@socket.io/redis-adapter": "^8.3.0",
+    "axios": "^1.7.9",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "multer": "^2.1.1",
+    "mysql2": "^3.11.5",
+    "node-cron": "^3.0.3",
+    "pdf-parse": "^2.4.5",
+    "redis": "^4.7.0",
+    "sequelize": "^6.37.5",
+    "socket.io": "^4.8.1",
+    "umzug": "^3.8.2",
+    "xlsx": "^0.18.5"
+  }
+}

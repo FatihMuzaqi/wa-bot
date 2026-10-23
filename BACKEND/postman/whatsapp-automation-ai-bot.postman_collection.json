@@ -1,0 +1,1047 @@
+{
+  "info": {
+    "_postman_id": "5df48706-0c4b-4a4d-8c03-7bbd4e5e79b2",
+    "name": "WhatsApp Automation & AI Bot Platform API",
+    "description": "Postman collection for backend REST APIs. Login automatically captures JWT accessToken and refreshToken into collection variables.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": []
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": []
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000/api",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "refreshToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "chatId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "agentId",
+      "value": "2",
+      "type": "string"
+    },
+    {
+      "key": "broadcastId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "scheduleId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "promptId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "sourceId",
+      "value": "1",
+      "type": "string"
+    },
+    {
+      "key": "instanceName",
+      "value": "default",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Login success', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const json = pm.response.json();",
+                  "const accessToken = json?.data?.tokens?.accessToken;",
+                  "const refreshToken = json?.data?.tokens?.refreshToken;",
+                  "",
+                  "if (accessToken) pm.collectionVariables.set('accessToken', accessToken);",
+                  "if (refreshToken) pm.collectionVariables.set('refreshToken', refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@company.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "profile"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const accessToken = json?.data?.tokens?.accessToken;",
+                  "const refreshToken = json?.data?.tokens?.refreshToken;",
+                  "if (accessToken) pm.collectionVariables.set('accessToken', accessToken);",
+                  "if (refreshToken) pm.collectionVariables.set('refreshToken', refreshToken);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh-token",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "refresh-token"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"password123\",\n  \"newPassword\": \"newpassword123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/change-password",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "change-password"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refreshToken}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Chats",
+      "item": [
+        {
+          "name": "Chat List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/chats?page=1&limit=20&status=human",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "chats"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                },
+                {
+                  "key": "status",
+                  "value": "human"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Chat Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/chats/{{chatId}}"
+          }
+        },
+        {
+          "name": "Assign Agent",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"agentId\": {{agentId}}\n}"
+            },
+            "url": "{{baseUrl}}/chats/{{chatId}}/assign"
+          }
+        },
+        {
+          "name": "Take Over Chat",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/chats/{{chatId}}/take-over"
+          }
+        },
+        {
+          "name": "Close Chat",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/chats/{{chatId}}/close"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send Chat Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"Hello from agent\",\n  \"instanceName\": \"{{instanceName}}\"\n}"
+            },
+            "url": "{{baseUrl}}/chats/{{chatId}}/messages"
+          }
+        },
+        {
+          "name": "Evolution Send Text",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instanceName\": \"{{instanceName}}\",\n  \"number\": \"6281234567890\",\n  \"text\": \"Hello via Evolution API\"\n}"
+            },
+            "url": "{{baseUrl}}/evolution/messages/text"
+          }
+        },
+        {
+          "name": "Evolution Send Image",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instanceName\": \"{{instanceName}}\",\n  \"number\": \"6281234567890\",\n  \"media\": \"https://example.com/image.jpg\",\n  \"caption\": \"Image caption\"\n}"
+            },
+            "url": "{{baseUrl}}/evolution/messages/image"
+          }
+        },
+        {
+          "name": "Evolution Send Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instanceName\": \"{{instanceName}}\",\n  \"number\": \"6281234567890\",\n  \"media\": \"https://example.com/file.pdf\",\n  \"fileName\": \"file.pdf\",\n  \"caption\": \"Document caption\"\n}"
+            },
+            "url": "{{baseUrl}}/evolution/messages/document"
+          }
+        },
+        {
+          "name": "Evolution Send Audio",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instanceName\": \"{{instanceName}}\",\n  \"number\": \"6281234567890\",\n  \"audio\": \"https://example.com/audio.mp3\"\n}"
+            },
+            "url": "{{baseUrl}}/evolution/messages/audio"
+          }
+        },
+        {
+          "name": "Evolution Send Video",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instanceName\": \"{{instanceName}}\",\n  \"number\": \"6281234567890\",\n  \"media\": \"https://example.com/video.mp4\",\n  \"caption\": \"Video caption\"\n}"
+            },
+            "url": "{{baseUrl}}/evolution/messages/video"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Broadcast",
+      "item": [
+        {
+          "name": "List Broadcasts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/broadcasts?page=1&limit=20"
+          }
+        },
+        {
+          "name": "Create Campaign",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Promo Campaign\",\n  \"messageType\": \"text\",\n  \"messagePayload\": {\n    \"instanceName\": \"{{instanceName}}\",\n    \"text\": \"Hello {{name}}, promo special today!\"\n  },\n  \"audienceFilter\": {\n    \"tags\": [\"VIP\"]\n  }\n}"
+            },
+            "url": "{{baseUrl}}/broadcasts"
+          }
+        },
+        {
+          "name": "Queue Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/broadcasts/queue/status"
+          }
+        },
+        {
+          "name": "Update Delivery Status",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evolutionMessageId\": \"MESSAGE_ID\",\n  \"status\": \"delivered\"\n}"
+            },
+            "url": "{{baseUrl}}/broadcasts/delivery-status"
+          }
+        },
+        {
+          "name": "Get Broadcast",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/broadcasts/{{broadcastId}}"
+          }
+        },
+        {
+          "name": "Schedule Broadcast",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"scheduledAt\": \"2026-06-02T09:00:00.000Z\"\n}"
+            },
+            "url": "{{baseUrl}}/broadcasts/{{broadcastId}}/schedule"
+          }
+        },
+        {
+          "name": "Start Broadcast",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/broadcasts/{{broadcastId}}/start"
+          }
+        },
+        {
+          "name": "Retry Failed Recipients",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/broadcasts/{{broadcastId}}/retry-failed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bot Rules",
+      "item": [
+        {
+          "name": "Execute Bot Engine",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"chatId\": {{chatId}},\n  \"text\": \"hello\",\n  \"instanceName\": \"{{instanceName}}\"\n}"
+            },
+            "url": "{{baseUrl}}/bot-engine/execute"
+          }
+        },
+        {
+          "name": "Queue Bot Engine Job",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"chatId\": {{chatId}},\n  \"text\": \"pricing\",\n  \"instanceName\": \"{{instanceName}}\"\n}"
+            },
+            "url": "{{baseUrl}}/bot-engine/queue"
+          }
+        },
+        {
+          "name": "Bot Queue Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/bot-engine/queue/status"
+          }
+        },
+        {
+          "name": "Test Bot Matcher",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"text\": \"hello, what is the price?\"\n}"
+            },
+            "url": "{{baseUrl}}/bot-engine/test"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Forms",
+      "item": []
+    },
+    {
+      "name": "AI Chatbot",
+      "item": [
+        {
+          "name": "Generate Answer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"What are your business hours?\",\n  \"conversation\": []\n}"
+            },
+            "url": "{{baseUrl}}/ai-chatbot/generate"
+          }
+        },
+        {
+          "name": "List Prompts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/ai-chatbot/prompts"
+          }
+        },
+        {
+          "name": "Create Prompt",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Default Support Prompt\",\n  \"prompt_type\": \"system\",\n  \"content\": \"You are a helpful WhatsApp customer service assistant.\",\n  \"model\": \"gpt-4.1-mini\"\n}"
+            },
+            "url": "{{baseUrl}}/ai-chatbot/prompts"
+          }
+        },
+        {
+          "name": "Update Prompt",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Updated prompt content\"\n}"
+            },
+            "url": "{{baseUrl}}/ai-chatbot/prompts/{{promptId}}"
+          }
+        },
+        {
+          "name": "Delete Prompt",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/ai-chatbot/prompts/{{promptId}}"
+          }
+        },
+        {
+          "name": "List Knowledge Sources",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/ai-chatbot/knowledge-sources"
+          }
+        },
+        {
+          "name": "Create Knowledge Source",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Product Docs\",\n  \"sourceType\": \"document\",\n  \"rawContent\": \"Product documentation content\"\n}"
+            },
+            "url": "{{baseUrl}}/ai-chatbot/knowledge-sources"
+          }
+        },
+        {
+          "name": "Get Knowledge Source",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/ai-chatbot/knowledge-sources/{{sourceId}}"
+          }
+        },
+        {
+          "name": "Add Knowledge Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Business Hours\",\n  \"text\": \"Our business hours are Monday to Friday, 9 AM to 6 PM.\"\n}"
+            },
+            "url": "{{baseUrl}}/ai-chatbot/knowledge-sources/{{sourceId}}/documents"
+          }
+        },
+        {
+          "name": "Add FAQ",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"question\": \"Do you offer international shipping?\",\n  \"answer\": \"Yes, we ship internationally to selected countries.\",\n  \"category\": \"shipping\"\n}"
+            },
+            "url": "{{baseUrl}}/ai-chatbot/faq"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Settings",
+      "item": []
+    },
+    {
+      "name": "Scheduler",
+      "item": [
+        {
+          "name": "List Schedules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/scheduler"
+          }
+        },
+        {
+          "name": "Create Schedule",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Daily Reminder\",\n  \"messagePayload\": {\n    \"instanceName\": \"{{instanceName}}\",\n    \"text\": \"Daily reminder\"\n  },\n  \"audienceFilter\": {\n    \"tags\": [\"VIP\"]\n  },\n  \"frequency\": \"daily\",\n  \"startAt\": \"2026-06-02T01:00:00.000Z\"\n}"
+            },
+            "url": "{{baseUrl}}/scheduler"
+          }
+        },
+        {
+          "name": "Create Reminder",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Payment Reminder\",\n  \"messagePayload\": {\n    \"instanceName\": \"{{instanceName}}\",\n    \"text\": \"Your payment is due tomorrow.\"\n  },\n  \"audienceFilter\": {\n    \"tags\": [\"Pending Payment\"]\n  },\n  \"frequency\": \"once\",\n  \"startAt\": \"2026-06-02T01:00:00.000Z\"\n}"
+            },
+            "url": "{{baseUrl}}/scheduler/reminders"
+          }
+        },
+        {
+          "name": "Schedule Campaign",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"broadcastId\": {{broadcastId}},\n  \"scheduledAt\": \"2026-06-02T09:00:00.000Z\"\n}"
+            },
+            "url": "{{baseUrl}}/scheduler/campaigns/schedule"
+          }
+        },
+        {
+          "name": "Run Due Now",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/scheduler/run-due"
+          }
+        },
+        {
+          "name": "Get Schedule",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/scheduler/{{scheduleId}}"
+          }
+        },
+        {
+          "name": "Pause Schedule",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/scheduler/{{scheduleId}}/pause"
+          }
+        },
+        {
+          "name": "Resume Schedule",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/scheduler/{{scheduleId}}/resume"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Evolution",
+      "item": [
+        {
+          "name": "Create Instance",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instanceName\": \"{{instanceName}}\",\n  \"qrcode\": true,\n  \"integration\": \"WHATSAPP-BAILEYS\"\n}"
+            },
+            "url": "{{baseUrl}}/evolution/instances"
+          }
+        },
+        {
+          "name": "Delete Instance",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/evolution/instances/{{instanceName}}"
+          }
+        },
+        {
+          "name": "Restart Instance",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{baseUrl}}/evolution/instances/{{instanceName}}/restart"
+          }
+        },
+        {
+          "name": "Get QR Code",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/evolution/instances/{{instanceName}}/qr"
+          }
+        },
+        {
+          "name": "Connection Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/evolution/instances/{{instanceName}}/status"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "Evolution Generic Webhook",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "apikey",
+                "value": "{{evolutionApiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event\": \"message.upsert\",\n  \"instance\": \"{{instanceName}}\",\n  \"data\": {\n    \"key\": {\n      \"id\": \"MESSAGE_ID\"\n    },\n    \"message\": {\n      \"conversation\": \"Hello\"\n    }\n  }\n}"
+            },
+            "url": "{{baseUrl}}/webhooks/evolution"
+          }
+        },
+        {
+          "name": "message.upsert",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "apikey",
+                "value": "{{evolutionApiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instance\": \"{{instanceName}}\",\n  \"data\": {\n    \"key\": {\n      \"id\": \"MESSAGE_ID\"\n    },\n    \"message\": {\n      \"conversation\": \"Hello\"\n    }\n  }\n}"
+            },
+            "url": "{{baseUrl}}/webhooks/evolution/message-upsert"
+          }
+        },
+        {
+          "name": "messages.update",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "apikey",
+                "value": "{{evolutionApiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instance\": \"{{instanceName}}\",\n  \"data\": {\n    \"key\": {\n      \"id\": \"MESSAGE_ID\"\n    },\n    \"status\": \"delivered\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/webhooks/evolution/messages-update"
+          }
+        },
+        {
+          "name": "connection.update",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "apikey",
+                "value": "{{evolutionApiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instance\": \"{{instanceName}}\",\n  \"data\": {\n    \"state\": \"open\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/webhooks/evolution/connection-update"
+          }
+        },
+        {
+          "name": "qr.updated",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "apikey",
+                "value": "{{evolutionApiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instance\": \"{{instanceName}}\",\n  \"data\": {\n    \"qrcode\": \"base64-qr\"\n  }\n}"
+            },
+            "url": "{{baseUrl}}/webhooks/evolution/qr-updated"
+          }
+        },
+        {
+          "name": "Evolution Dynamic Event",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "apikey",
+                "value": "{{evolutionApiKey}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"instance\": \"{{instanceName}}\",\n  \"data\": {}\n}"
+            },
+            "url": "{{baseUrl}}/webhooks/evolution/message.upsert"
+          }
+        }
+      ]
+    }
+  ]
+}
